@@ -17,7 +17,7 @@ targets += vdso.so vdso.so.dbg vdso.lds $(vobjs-y) vdso-syms.o
 
 # The DSO images are built using a special linker script.
 quiet_cmd_syscall = SYSCALL $@
-      cmd_syscall = $(CC) -m elf_x86_64 -nostdlib $(SYSCFLAGS_$(@F)) \
+      cmd_syscall = $(CC) -m64 -nostdlib $(SYSCFLAGS_$(@F)) \
 		          -Wl,-T,$(filter-out FORCE,$^) -o $@
 
 export CPPFLAGS_vdso.lds += -P -C
@@ -51,7 +51,7 @@ extra-y += vdso-syms.o
 $(obj)/built-in.o: $(obj)/vdso-syms.o
 $(obj)/built-in.o: ld_flags += -R $(obj)/vdso-syms.o
 
-SYSCFLAGS_vdso-syms.o = -r -d
+SYSCFLAGS_vdso-syms.o = -r
 $(obj)/vdso-syms.o: $(src)/vdso.lds $(vobjs) FORCE
 	$(call if_changed,syscall)
 
